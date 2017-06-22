@@ -1,0 +1,11 @@
+{application, throwdown,
+ [{description, "Rock-Paper-Scissors Erlang"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {applications, [kernel, stdlib]},
+  {env,[]},
+  {modules, []},
+  {maintainers, ["Mark Allen"]},
+  {licenses, ["MIT"]},
+  {links, [{"Github", "https://github.com/mrallen1/throwdown"}]}
+ ]}.
