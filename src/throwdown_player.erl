@@ -1,8 +1,6 @@
 -module(throwdown_player).
 -behaviour(gen_server).
 
--define(SERVER, ?MODULE).
-
 -export([
          start_link/2,
          start_link/3,
@@ -36,7 +34,7 @@ default_strategy(_State = #{ choices := Choices }) ->
     pick_one(Choices).
 
 play(Pid, State) ->
-    gen_server:call(Pid, {play, State}).
+    gen_server:cast(Pid, {play, State}).
 
 leave(Pid) ->
     gen_server:call(Pid, leave).
@@ -48,18 +46,18 @@ init([Name, Arena, Strategy]) ->
     ok = throwdown_arena:register(Name, self()),
     {ok, #state{ name = Name, arena = Arena, strategy = Strategy }}.
 
+handle_cast({play, _GameState}, State = #state{ arena = undefined }) ->
+    {noreply, State};
+handle_cast({play, GameState}, State = #state{ arena = A, name = N, strategy = S }) ->
+    Choice = S(GameState),
+    spawn(fun() -> ok = throwdown_arena:submit_choice(A, N, Choice) end),
+    {noreply, State};
 handle_cast(_Cast, State) ->
     {noreply, State}.
 
-handle_call(leave, _From, State) ->
+handle_call(leave, _From, State = #state{ arena = A }) ->
+    unlink(A),
     {reply, ok, State#state{ arena = undefined }};
-
-handle_call({play, _GameState}, _From, State = #state{ arena = undefined }) ->
-    {reply, {error, no_arena}, State};
-
-handle_call({play, GameState}, _From, State = #state{ name = N, strategy = S }) ->
-    Reply = S(GameState),
-    {reply, {ok, {N, Reply}}, State};
 
 handle_call(_Call, _From, State) ->
     {reply, dieeeeee, State}.

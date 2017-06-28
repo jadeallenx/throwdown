@@ -11,15 +11,15 @@
 start_link() ->
     supervisor:start_link({local, ?SERVER}, ?MODULE, []).
 
-player_spec() ->
-    #{id       => undefined,
-      start    => {throwdown_player, start_link, []},
-      restart  => temporary,
+sup_spec(Name) ->
+    #{id       => Name,
+      start    => {Name, start_link, []},
+      restart  => permanent,
       shutdown => 2000,
-      type     => worker,
-      modules  => [throwdown_player]}.
+      type     => supervisor,
+      modules  => [Name]}.
 
 init([]) ->
-    SupFlags = #{ strategy => simple_one_for_one },
-    Children = [ throwdown_arena:child_spec(), player_spec() ],
+    SupFlags = #{ strategy => one_for_one },
+    Children = [ sup_spec(throwdown_arena_sup), sup_spec(throwdown_player_sup) ],
     {ok, {SupFlags, Children}}.
