@@ -43,7 +43,7 @@ leave(Pid) ->
 
 init([Name, Arena, Strategy]) ->
     link(Arena), %% if arena dies, we die
-    ok = throwdown_arena:register(Name, self()),
+    ok = throwdown_arena:register_player(Arena, Name, self()),
     {ok, #state{ name = Name, arena = Arena, strategy = Strategy }}.
 
 handle_cast({play, _GameState}, State = #state{ arena = undefined }) ->

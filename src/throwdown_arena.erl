@@ -95,7 +95,7 @@ done(Arena) ->
 init([Name, Rules]) ->
     Choices = throwdown:get_env(choices, [rock, paper, scissors, lizard, spock]),
     GState = #{ choices => Choices, current => ordsets:new(), results => [] },
-    {ok, #state{ name = Name, rules = Rules, game_state = GState }}.
+    {ok, #state{ mode = waiting, name = Name, rules = Rules, game_state = GState }}.
 
 handle_cast(_Cast, State) ->
     {noreply, State}.
@@ -113,9 +113,9 @@ handle_call({choice, _C}, _From, State = #state{ mode = waiting }) ->
     {reply, {error, cannot_select}, State};
 handle_call({choice, C}, _From, State = #state{ mode = playing, players = P, game_state = G }) ->
     Current = maps:get(current, G),
-    NewCurrent = ordset:add_element(C, Current),
+    NewCurrent = ordsets:add_element(C, Current),
     NewG = maps:put(current, NewCurrent, G),
-    NewMode = case ordset:size(NewCurrent) == maps:size(P) of
+    NewMode = case ordsets:size(NewCurrent) == maps:size(P) of
         true ->
             self() ! start_round,
             evaluation;
@@ -178,7 +178,7 @@ remove_players([ _H | T ], P) ->
 
 evaluate_choices(_Rules, [], _Picks, Acc) -> Acc;
 evaluate_choices(Rules, [ H | Rest ], All, Acc) ->
-    Picks = All - [H],
+    Picks = All -- [H],
     Outcome = case versus(Rules, H, Picks, undefined) of
         tie -> {tie, H};
         win -> {win, H};

@@ -29,7 +29,7 @@ start_player(Name, Arena) ->
 
 start_game(Players) when length(Players) > 1 ->
     {ok, ArenaPid} = start_arena(<<"arena">>),
-    Players = maps:from_list(
+    PMap = maps:from_list(
                 [ begin
                       {ok, P} = start_player(N, ArenaPid),
                       {N, P}
@@ -38,5 +38,5 @@ start_game(Players) when length(Players) > 1 ->
 
     throwdown_arena:done(ArenaPid),
 
-    #{ arena => ArenaPid, players => Players }.
+    #{ arena => ArenaPid, players => PMap }.
 
