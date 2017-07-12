@@ -1,3 +1,6 @@
+%% @doc This is the main OTP application callback module.  It doesn't do much
+%% more than start the main supervisor.
+
 -module(throwdown_app).
 -behaviour(application).
 

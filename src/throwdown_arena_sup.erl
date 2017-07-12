@@ -1,3 +1,10 @@
+%% @doc This supervisor manages the arenas that manage game state, including
+%% the  players who are currently participating in a round, what the choices
+%% were  for the round and so on.    The supervisor starts arenas as "simple
+%% one for one" type because they aren't  expected to be a "long lived
+%% process." They exist for as long as a game goes on.   Once a winner has
+%% been decided, it will shut down.
+
 -module(throwdown_arena_sup).
 -behaviour(supervisor).
 

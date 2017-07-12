@@ -1,3 +1,7 @@
+%% @doc This is the supervisor which starts processes to hold player state.
+%% Player processes are responsible for making using a strategy and using that
+%% strategy to make a choice in an arena.
+
 -module(throwdown_player_sup).
 -behaviour(supervisor).
 

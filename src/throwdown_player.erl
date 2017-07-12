@@ -1,3 +1,21 @@
+%% @doc This module represents the API for player processes. Implemented as a
+%% `gen_server' it does two main things after initialization:
+%% <ul>
+%%   <li>play: choose a legal move from the available choices in the game
+%%             state</li>
+%%   <li>leave: exit an arena after being beaten by another player.</li>
+%% </ul>
+%%
+%% Players play by using a function to make their choice. The
+%% `default_strategy/1' function is the default and it simply
+%% chooses a random element from the list of possible moves.
+%%
+%% It's possible to create your own strategy function and pass
+%% it in during player initialization.
+%%
+%% The only parameter the function takes is the game state which
+%% comes from the arena process.
+
 -module(throwdown_player).
 -behaviour(gen_server).
 

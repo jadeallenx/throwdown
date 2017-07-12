@@ -1,3 +1,6 @@
+%% @doc This is the main supervisor. It starts two child supervisors: one for
+%% arenas and one for player instances.
+
 -module(throwdown_sup).
 -behaviour(supervisor).
 
