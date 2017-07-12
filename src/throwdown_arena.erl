@@ -32,6 +32,7 @@
 %% game.</li>
 %% <li>`results': A list representing the past moves and outcomes from past
 %% rounds of this game.</li>
+%% </ul>
 %%
 %% This game state is passed into the player process so that each player may
 %% make a move selection.
